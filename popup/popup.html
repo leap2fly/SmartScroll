@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SBC - Popup</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <div class="header">
+        <img src="../assets/icon48.png" alt="SBC">
+        <span>Smart Browsing Control</span>
+    </div>
+
+    <div class="status-card">
+        <div class="site-info">
+            <span class="label">Current Site</span>
+            <span id="current-domain" class="value">Loading...</span>
+        </div>
+        <div class="site-status">
+            <span id="status-badge" class="badge">Checking...</span>
+        </div>
+    </div>
+
+    <div class="actions">
+        <button id="go-dashboard" class="btn-primary">Dashboard</button>
+        <button id="go-settings" class="btn-secondary">Settings</button>
+    </div>
+
+    <div class="footer">
+        Active and Protecting
+    </div>
+    <script type="module" src="popup.js"></script>
+</body>
+</html>

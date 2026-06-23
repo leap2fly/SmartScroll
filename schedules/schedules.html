@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SBC - Schedules</title>
+    <link rel="stylesheet" href="../dashboard/dashboard.css">
+    <link rel="stylesheet" href="../rules/rules.css">
+    <style>
+        .days-selector { display: flex; gap: 8px; margin: 12px 0; }
+        .day-btn { padding: 6px 10px; border: 1px solid #d1d5db; border-radius: 4px; background: white; cursor: pointer; }
+        .day-btn.active { background: #2563eb; color: white; border-color: #2563eb; }
+    </style>
+</head>
+<body class="hidden">
+    <div class="sidebar">
+        <div class="logo-small">
+            <img src="../assets/icon48.png" alt="SBC">
+            <span>SBC</span>
+        </div>
+        <nav>
+            <a href="../dashboard/dashboard.html">Dashboard</a>
+            <a href="../rules/rules.html">Rules</a>
+            <a href="../schedules/schedules.html" class="active">Schedules</a>
+            <a href="../settings/settings.html">Settings</a>
+        </nav>
+    </div>
+    <main>
+        <header>
+            <h1>Schedules & Duration Limits</h1>
+        </header>
+
+        <section class="card">
+            <h2>Time Schedules</h2>
+            <form id="schedule-form">
+                <div class="inline-form">
+                    <select id="sched-category" required></select>
+                    <input type="time" id="sched-start" required>
+                    <span>to</span>
+                    <input type="time" id="sched-end" required>
+                </div>
+                <div class="days-selector" id="days-selector">
+                    <button type="button" class="day-btn" data-day="1">Mon</button>
+                    <button type="button" class="day-btn" data-day="2">Tue</button>
+                    <button type="button" class="day-btn" data-day="3">Wed</button>
+                    <button type="button" class="day-btn" data-day="4">Thu</button>
+                    <button type="button" class="day-btn" data-day="5">Fri</button>
+                    <button type="button" class="day-btn" data-day="6">Sat</button>
+                    <button type="button" class="day-btn" data-day="0">Sun</button>
+                </div>
+                <button type="submit">Create Schedule</button>
+            </form>
+            <table class="data-table" style="margin-top: 20px;">
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Time</th>
+                        <th>Days</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="schedules-table-body"></tbody>
+            </table>
+        </section>
+
+        <section class="card">
+            <h2>Daily Duration Limits</h2>
+            <form id="limit-form" class="inline-form">
+                <select id="limit-category" required></select>
+                <input type="number" id="limit-minutes" placeholder="Minutes per day" required min="1">
+                <button type="submit">Add Limit</button>
+            </form>
+            <table class="data-table" style="margin-top: 20px;">
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Daily Limit (min)</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="limits-table-body"></tbody>
+            </table>
+        </section>
+    </main>
+    <script type="module" src="schedules.js"></script>
+</body>
+</html>

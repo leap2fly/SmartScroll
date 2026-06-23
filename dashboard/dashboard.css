@@ -1,0 +1,87 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f3f4f6;
+    color: #1f2937;
+    margin: 0;
+    display: flex;
+}
+
+.sidebar {
+    width: 240px;
+    background: #1e293b;
+    color: white;
+    height: 100vh;
+    padding: 24px 0;
+    position: fixed;
+}
+
+.logo-small {
+    padding: 0 24px;
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-small img {
+    width: 32px;
+}
+
+.logo-small span {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+nav a {
+    display: block;
+    padding: 12px 24px;
+    color: #94a3b8;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+nav a:hover, nav a.active {
+    color: white;
+    background: #334155;
+}
+
+main {
+    margin-left: 240px;
+    padding: 40px;
+    width: 100%;
+}
+
+header {
+    margin-bottom: 32px;
+}
+
+h1 { margin: 0; font-size: 1.875rem; }
+
+.card {
+    background: white;
+    padding: 24px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    margin-bottom: 24px;
+}
+
+.card h2 { margin-top: 0; font-size: 1.25rem; margin-bottom: 16px; }
+
+.hidden { display: none !important; }
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.stat-card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    border-top: 4px solid #2563eb;
+}
+
+.stat-label { font-size: 0.875rem; color: #6b7280; }
+.stat-value { font-size: 1.5rem; font-weight: bold; margin-top: 4px; }

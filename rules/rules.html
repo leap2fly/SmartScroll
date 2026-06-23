@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SBC - Rules</title>
+    <link rel="stylesheet" href="../dashboard/dashboard.css">
+    <link rel="stylesheet" href="rules.css">
+</head>
+<body class="hidden">
+    <div class="sidebar">
+        <div class="logo-small">
+            <img src="../assets/icon48.png" alt="SBC">
+            <span>SBC</span>
+        </div>
+        <nav>
+            <a href="../dashboard/dashboard.html">Dashboard</a>
+            <a href="../rules/rules.html" class="active">Rules</a>
+            <a href="../schedules/schedules.html">Schedules</a>
+            <a href="../settings/settings.html">Settings</a>
+        </nav>
+    </div>
+    <main>
+        <header>
+            <h1>Category & Domain Rules</h1>
+        </header>
+
+        <section class="card">
+            <h2>Enable/Disable Categories</h2>
+            <div id="category-list" class="grid-list">
+                <!-- Dynamically populated -->
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>Manage Domains in Categories</h2>
+            <form id="add-domain-cat-form" class="inline-form">
+                <select id="cat-select" required></select>
+                <input type="text" id="cat-domain" placeholder="domain.com" required>
+                <button type="submit">Add to Category</button>
+            </form>
+            <div id="category-domains-display" style="margin-top: 16px;">
+                <!-- Lists of domains per category -->
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>Custom Domain Rules (Always Block)</h2>
+            <form id="add-rule-form" class="inline-form">
+                <input type="text" id="rule-pattern" placeholder="domain.com" required>
+                <select id="rule-type">
+                    <option value="domain">Block Domain</option>
+                </select>
+                <button type="submit">Add Rule</button>
+            </form>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Pattern</th>
+                        <th>Type</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="rules-table-body">
+                    <!-- Dynamically populated -->
+                </tbody>
+            </table>
+        </section>
+    </main>
+    <script type="module" src="rules.js"></script>
+</body>
+</html>

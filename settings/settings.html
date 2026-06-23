@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SBC - Settings</title>
+    <link rel="stylesheet" href="../dashboard/dashboard.css">
+    <link rel="stylesheet" href="../rules/rules.css">
+</head>
+<body class="hidden">
+    <div class="sidebar">
+        <div class="logo-small">
+            <img src="../assets/icon48.png" alt="SBC">
+            <span>SBC</span>
+        </div>
+        <nav>
+            <a href="../dashboard/dashboard.html">Dashboard</a>
+            <a href="../rules/rules.html">Rules</a>
+            <a href="../schedules/schedules.html">Schedules</a>
+            <a href="../settings/settings.html" class="active">Settings</a>
+        </nav>
+    </div>
+    <main>
+        <header>
+            <h1>Global Settings</h1>
+        </header>
+
+        <section class="card">
+            <h2>Session Timeout</h2>
+            <p>How long until settings are locked again?</p>
+            <select id="session-timeout">
+                <option value="5">5 Minutes</option>
+                <option value="15">15 Minutes</option>
+                <option value="30">30 Minutes</option>
+                <option value="60">60 Minutes</option>
+            </select>
+        </section>
+
+        <section class="card">
+            <h2>Manage Whitelist</h2>
+            <p>Whitelist overrides ALL blocking.</p>
+            <form id="whitelist-form" class="inline-form">
+                <input type="text" id="whitelist-pattern" placeholder="youtube.com/watch?v=*" required>
+                <select id="whitelist-scope">
+                    <option value="domain">Domain</option>
+                    <option value="url">URL Pattern</option>
+                </select>
+                <button type="submit">Add to Whitelist</button>
+            </form>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Pattern</th>
+                        <th>Scope</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="whitelist-table-body"></tbody>
+            </table>
+        </section>
+
+        <section class="card">
+            <h2>Change Password</h2>
+            <form id="change-password-form" style="max-width: 300px; display: flex; flex-direction: column; gap: 12px;">
+                <input type="password" id="current-password" placeholder="Current Password" required autocomplete="off">
+                <input type="password" id="new-password" placeholder="New Password" required autocomplete="off">
+                <input type="password" id="confirm-password" placeholder="Confirm New Password" required autocomplete="off">
+                <button type="submit">Update Password</button>
+            </form>
+        </section>
+    </main>
+    <script type="module" src="settings.js"></script>
+</body>
+</html>
