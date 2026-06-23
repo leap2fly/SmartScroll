@@ -122,6 +122,22 @@ async function refreshBlockingRules() {
         });
     });
 
+    // 5. YouTube Shorts Redirect (DNR)
+    dynamicRules.push({
+        id: 9999, // Static-ish ID for redirect
+        priority: 100,
+        action: {
+            type: 'redirect',
+            redirect: {
+                regexSubstitution: 'https://www.youtube.com/watch?v=\\1'
+            }
+        },
+        condition: {
+            regexFilter: '^https?://(?:www\\.)?youtube\\.com/shorts/([^/?#]+)',
+            resourceTypes: ['main_frame']
+        }
+    });
+
     const oldRules = await chrome.declarativeNetRequest.getDynamicRules();
     const oldRuleIds = oldRules.map(r => r.id);
 
@@ -131,17 +147,6 @@ async function refreshBlockingRules() {
     });
 }
 
-/**
- * YouTube Shorts Redirect
- */
-chrome.webNavigation.onBeforeNavigate.addListener((details) => {
-    if (details.frameId !== 0) return;
-    const url = new URL(details.url);
-    if (url.hostname.includes('youtube.com') && url.pathname.startsWith('/shorts/')) {
-        const videoId = url.pathname.split('/')[2];
-        chrome.tabs.update(details.tabId, { url: `https://www.youtube.com/watch?v=${videoId}` });
-    }
-});
 
 /**
  * Track blocked events for stats

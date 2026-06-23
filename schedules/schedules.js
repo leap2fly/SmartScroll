@@ -76,8 +76,27 @@ async function renderSchedules() {
     schedules.forEach((s, index) => {
         const tr = document.createElement('tr');
         const daysStr = s.days.map(d => dayMap[d]).join(', ');
-        tr.innerHTML = `<td>${s.category}</td><td>${s.start} - ${s.end}</td><td>${daysStr}</td><td><button class="btn-danger" data-index="${index}">Delete</button></td>`;
-        tr.querySelector('.btn-danger').onclick = () => deleteSchedule(index);
+
+        const tdCat = document.createElement('td');
+        tdCat.textContent = s.category;
+        tr.appendChild(tdCat);
+
+        const tdTime = document.createElement('td');
+        tdTime.textContent = `${s.start} - ${s.end}`;
+        tr.appendChild(tdTime);
+
+        const tdDays = document.createElement('td');
+        tdDays.textContent = daysStr;
+        tr.appendChild(tdDays);
+
+        const tdActions = document.createElement('td');
+        const btn = document.createElement('button');
+        btn.className = 'btn-danger';
+        btn.textContent = 'Delete';
+        btn.onclick = () => deleteSchedule(index);
+        tdActions.appendChild(btn);
+        tr.appendChild(tdActions);
+
         tbody.appendChild(tr);
     });
 }
@@ -117,8 +136,23 @@ async function renderLimits() {
 
     limits.forEach((l, index) => {
         const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${l.category}</td><td>${l.dailyLimit}</td><td><button class="btn-danger" data-index="${index}">Delete</button></td>`;
-        tr.querySelector('.btn-danger').onclick = () => deleteLimit(index);
+
+        const tdCat = document.createElement('td');
+        tdCat.textContent = l.category;
+        tr.appendChild(tdCat);
+
+        const tdLimit = document.createElement('td');
+        tdLimit.textContent = l.dailyLimit;
+        tr.appendChild(tdLimit);
+
+        const tdActions = document.createElement('td');
+        const btn = document.createElement('button');
+        btn.className = 'btn-danger';
+        btn.textContent = 'Delete';
+        btn.onclick = () => deleteLimit(index);
+        tdActions.appendChild(btn);
+        tr.appendChild(tdActions);
+
         tbody.appendChild(tr);
     });
 }
