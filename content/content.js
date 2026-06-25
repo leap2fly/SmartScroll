@@ -6,11 +6,29 @@
 // Since we cannot access the page context directly in MV3 content scripts without ES modules/isolation issues,
 // we inject a script into the page.
 
-const injectScript = () => {
-    const script = document.createElement('script');
-    script.src = chrome.runtime.getURL('content/inject.js');
-    (document.head || document.documentElement).appendChild(script);
-    script.onload = () => script.remove();
+const injectScript = async () => {
+    // Check whitelist status to inform the injected script
+    try {
+        const domain = window.location.hostname;
+        chrome.storage.local.get(['whitelist'], (result) => {
+            const whitelist = result.whitelist || [];
+            const isWhitelisted = whitelist.some(w => domain.includes(w.pattern));
+            if (isWhitelisted) {
+                document.documentElement.dataset.sbcWhitelisted = "true";
+            }
+
+            const script = document.createElement('script');
+            script.src = chrome.runtime.getURL('content/inject.js');
+            (document.head || document.documentElement).appendChild(script);
+            script.onload = () => script.remove();
+        });
+    } catch (e) {
+        // Fallback for isolated worlds where storage might be inaccessible
+        const script = document.createElement('script');
+        script.src = chrome.runtime.getURL('content/inject.js');
+        (document.head || document.documentElement).appendChild(script);
+        script.onload = () => script.remove();
+    }
 };
 
 injectScript();

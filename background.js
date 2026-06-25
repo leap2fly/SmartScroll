@@ -207,15 +207,16 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 async function handleAutoCategorization(data, tab) {
     if (!tab || !tab.id) return;
-    const { title, description, keywords, domain } = data;
+    const { title, description, keywords } = data;
+    const domain = data.domain.toLowerCase();
     const combinedText = `${title} ${description} ${keywords}`.toLowerCase();
 
     const categories = await getStorageData(STORAGE_KEYS.CATEGORIES) || DEFAULT_CATEGORIES;
     const rules = await getStorageData(STORAGE_KEYS.RULES) || [];
 
-    // Skip if already categorized
+    // Skip if already categorized (check subdomains)
     for (const catDomains of Object.values(categories)) {
-        if (catDomains.includes(domain)) return;
+        if (catDomains.some(d => domain === d || domain.endsWith('.' + d))) return;
     }
 
     let detectedCategory = null;
