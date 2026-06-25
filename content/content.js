@@ -7,10 +7,14 @@
 // we inject a script into the page.
 
 const injectScript = async () => {
-    // Check whitelist status to inform the injected script
+    // Check settings and whitelist
     try {
         const domain = window.location.hostname;
-        chrome.storage.local.get(['whitelist'], (result) => {
+        chrome.storage.local.get(['settings', 'whitelist'], (result) => {
+            const settings = result.settings || {};
+            // If autoplay blocking is disabled, skip injection and neutralization
+            if (settings.blockAutoplay === false) return;
+
             const whitelist = result.whitelist || [];
             const isWhitelisted = whitelist.some(w => domain.includes(w.pattern));
             if (isWhitelisted) {
@@ -35,8 +39,12 @@ injectScript();
 
 // --- Layer 2 & 3: DOM Processing and MutationObserver ---
 
-const processVideo = (video) => {
+const processVideo = async (video) => {
     if (video.dataset.sbProcessed) return;
+
+    // Check settings - only process if autoplay blocking is enabled
+    const settings = await new Promise(r => chrome.storage.local.get(['settings'], res => r(res.settings || {})));
+    if (settings.blockAutoplay === false) return;
 
     // Check if it's already marked as allowed (e.g., user clicked play)
     if (video.dataset.allowPlay === "true") return;
@@ -87,7 +95,12 @@ observer.observe(document.body || document.documentElement, {
 });
 
 // Initial scan
-document.querySelectorAll('video').forEach(processVideo);
+(async () => {
+    const settings = await new Promise(r => chrome.storage.local.get(['settings'], res => r(res.settings || {})));
+    if (settings.blockAutoplay !== false) {
+        document.querySelectorAll('video').forEach(processVideo);
+    }
+})();
 
 // --- YouTube Specific Rules ---
 function hideYouTubeElements() {

@@ -7,9 +7,17 @@ async function init() {
 
     const settings = await getStorageData(STORAGE_KEYS.SETTINGS);
     document.getElementById('session-timeout').value = settings.sessionTimeout || 15;
+    document.getElementById('block-autoplay').checked = settings.blockAutoplay !== false;
 
     await renderWhitelist();
 }
+
+document.getElementById('block-autoplay').addEventListener('change', async (e) => {
+    if (!(await checkAuth())) return;
+    const settings = await getStorageData(STORAGE_KEYS.SETTINGS);
+    settings.blockAutoplay = e.target.checked;
+    await setStorageData(STORAGE_KEYS.SETTINGS, settings);
+});
 
 document.getElementById('session-timeout').addEventListener('change', async (e) => {
     if (!(await checkAuth())) return;

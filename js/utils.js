@@ -19,7 +19,8 @@ export const DEFAULT_SETTINGS = {
     failedAttempts: 0,
     lockUntil: 0,
     passwordHash: null,
-    isFirstRun: true
+    isFirstRun: true,
+    blockAutoplay: true
 };
 
 export const DEFAULT_CATEGORIES = {

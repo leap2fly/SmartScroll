@@ -25,14 +25,24 @@
         </header>
 
         <section class="card">
-            <h2>Session Timeout</h2>
-            <p>How long until settings are locked again?</p>
-            <select id="session-timeout">
+            <h2>General</h2>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 12px;">
+                <span>Block Video Autoplay</span>
+                <label class="switch">
+                    <input type="checkbox" id="block-autoplay">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div style="margin-top: 24px;">
+                <h3>Session Timeout</h3>
+                <p>How long until settings are locked again?</p>
+                <select id="session-timeout">
                 <option value="5">5 Minutes</option>
                 <option value="15">15 Minutes</option>
                 <option value="30">30 Minutes</option>
                 <option value="60">60 Minutes</option>
             </select>
+            </div>
         </section>
 
         <section class="card">
