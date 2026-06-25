@@ -1,4 +1,4 @@
-import { STORAGE_KEYS, DEFAULT_SETTINGS, DEFAULT_CATEGORIES, INDUSTRY_STANDARDS, getStorageData, setStorageData, updateStats, trackUsage } from './js/utils.js';
+import { STORAGE_KEYS, DEFAULT_SETTINGS, DEFAULT_CATEGORIES, CATEGORY_KEYWORDS, INDUSTRY_STANDARDS, getStorageData, setStorageData, updateStats, trackUsage } from './js/utils.js';
 
 chrome.runtime.onInstalled.addListener(async (details) => {
     if (details.reason === 'install') {
@@ -122,6 +122,22 @@ async function refreshBlockingRules() {
         });
     });
 
+    // 5. YouTube Shorts Redirect (DNR)
+    dynamicRules.push({
+        id: 9999, // Static-ish ID for redirect
+        priority: 100,
+        action: {
+            type: 'redirect',
+            redirect: {
+                regexSubstitution: 'https://www.youtube.com/watch?v=\\1'
+            }
+        },
+        condition: {
+            regexFilter: '^https?://(?:www\\.)?youtube\\.com/shorts/([^/?#]+)',
+            resourceTypes: ['main_frame']
+        }
+    });
+
     const oldRules = await chrome.declarativeNetRequest.getDynamicRules();
     const oldRuleIds = oldRules.map(r => r.id);
 
@@ -131,17 +147,6 @@ async function refreshBlockingRules() {
     });
 }
 
-/**
- * YouTube Shorts Redirect
- */
-chrome.webNavigation.onBeforeNavigate.addListener((details) => {
-    if (details.frameId !== 0) return;
-    const url = new URL(details.url);
-    if (url.hostname.includes('youtube.com') && url.pathname.startsWith('/shorts/')) {
-        const videoId = url.pathname.split('/')[2];
-        chrome.tabs.update(details.tabId, { url: `https://www.youtube.com/watch?v=${videoId}` });
-    }
-});
 
 /**
  * Track blocked events for stats
@@ -195,8 +200,47 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         if (sender.tab && sender.tab.url) {
             detectCategoryAndStats(sender.tab.url);
         }
+    } else if (message.type === 'IDENTIFY_CATEGORY') {
+        handleAutoCategorization(message.data, sender.tab);
     }
 });
+
+async function handleAutoCategorization(data, tab) {
+    if (!tab || !tab.id) return;
+    const { title, description, keywords, domain } = data;
+    const combinedText = `${title} ${description} ${keywords}`.toLowerCase();
+
+    const categories = await getStorageData(STORAGE_KEYS.CATEGORIES) || DEFAULT_CATEGORIES;
+    const rules = await getStorageData(STORAGE_KEYS.RULES) || [];
+
+    // Skip if already categorized
+    for (const catDomains of Object.values(categories)) {
+        if (catDomains.includes(domain)) return;
+    }
+
+    let detectedCategory = null;
+    for (const [category, words] of Object.entries(CATEGORY_KEYWORDS)) {
+        if (words.some(word => combinedText.includes(word.toLowerCase()))) {
+            detectedCategory = category;
+            break;
+        }
+    }
+
+    if (detectedCategory) {
+        console.log(`[SBC] Auto-categorized ${domain} as ${detectedCategory}`);
+        categories[detectedCategory].push(domain);
+        await setStorageData(STORAGE_KEYS.CATEGORIES, categories);
+
+        // Check if this category is currently blocked
+        const isBlocked = rules.some(r => r.type === 'category' && r.pattern === detectedCategory);
+        if (isBlocked) {
+            chrome.tabs.remove(tab.id);
+            updateStats('blockedSessions');
+        }
+
+        await refreshBlockingRules();
+    }
+}
 
 async function detectCategoryAndStats(urlStr) {
     try {

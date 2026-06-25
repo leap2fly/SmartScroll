@@ -20,14 +20,24 @@ async function renderCategories() {
         const isBlocked = rules.some(r => r.type === 'category' && r.pattern === cat);
         const div = document.createElement('div');
         div.className = 'category-item';
-        div.innerHTML = `
-            <span>${cat}</span>
-            <label class="switch">
-                <input type="checkbox" ${isBlocked ? 'checked' : ''} data-category="${cat}">
-                <span class="slider"></span>
-            </label>
-        `;
-        div.querySelector('input').addEventListener('change', (e) => toggleCategory(cat, e.target.checked));
+
+        const span = document.createElement('span');
+        span.textContent = cat;
+        div.appendChild(span);
+
+        const label = document.createElement('label');
+        label.className = 'switch';
+        const input = document.createElement('input');
+        input.type = 'checkbox';
+        input.checked = isBlocked;
+        input.dataset.category = cat;
+        input.addEventListener('change', (e) => toggleCategory(cat, e.target.checked));
+        const slider = document.createElement('span');
+        slider.className = 'slider';
+        label.appendChild(input);
+        label.appendChild(slider);
+        div.appendChild(label);
+
         container.appendChild(div);
     });
 }
@@ -61,17 +71,30 @@ async function renderCategoryDomainManagement() {
 
         const section = document.createElement('div');
         section.className = 'cat-domains-section';
-        section.innerHTML = `<strong>${cat}:</strong> ${categories[cat].map((d, i) => `<span>${d} <a href="#" data-cat="${cat}" data-index="${i}" class="remove-domain">×</a></span>`).join(', ')}`;
-        display.appendChild(section);
-    });
+        const strong = document.createElement('strong');
+        strong.textContent = `${cat}: `;
+        section.appendChild(strong);
 
-    display.querySelectorAll('.remove-domain').forEach(link => {
-        link.onclick = async (e) => {
-            e.preventDefault();
-            const cat = link.dataset.cat;
-            const idx = parseInt(link.dataset.index);
-            await removeDomainFromCategory(cat, idx);
-        };
+        categories[cat].forEach((d, i) => {
+            const span = document.createElement('span');
+            span.textContent = d + ' ';
+            const a = document.createElement('a');
+            a.href = '#';
+            a.textContent = '×';
+            a.className = 'remove-domain';
+            a.dataset.cat = cat;
+            a.dataset.index = i;
+            a.onclick = async (e) => {
+                e.preventDefault();
+                await removeDomainFromCategory(cat, i);
+            };
+            span.appendChild(a);
+            section.appendChild(span);
+            if (i < categories[cat].length - 1) {
+                section.appendChild(document.createTextNode(', '));
+            }
+        });
+        display.appendChild(section);
     });
 }
 
@@ -106,8 +129,23 @@ async function renderRules() {
 
     rules.filter(r => r.type === 'domain').forEach((rule, index) => {
         const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${rule.pattern}</td><td>${rule.type}</td><td><button class="btn-danger">Delete</button></td>`;
-        tr.querySelector('.btn-danger').onclick = () => deleteRule(index);
+
+        const tdPattern = document.createElement('td');
+        tdPattern.textContent = rule.pattern;
+        tr.appendChild(tdPattern);
+
+        const tdType = document.createElement('td');
+        tdType.textContent = rule.type;
+        tr.appendChild(tdType);
+
+        const tdActions = document.createElement('td');
+        const btn = document.createElement('button');
+        btn.className = 'btn-danger';
+        btn.textContent = 'Delete';
+        btn.onclick = () => deleteRule(index);
+        tdActions.appendChild(btn);
+        tr.appendChild(tdActions);
+
         tbody.appendChild(tr);
     });
 }
@@ -133,5 +171,12 @@ document.getElementById('add-rule-form').onsubmit = async (e) => {
     document.getElementById('rule-pattern').value = '';
     renderRules();
 };
+
+// Refresh UI when storage changes (e.g. auto-categorization)
+chrome.storage.onChanged.addListener(async (changes) => {
+    if (changes[STORAGE_KEYS.CATEGORIES]) {
+        await renderCategoryDomainManagement();
+    }
+});
 
 init();

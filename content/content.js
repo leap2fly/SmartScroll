@@ -130,3 +130,27 @@ if (window.location.hostname.includes('youtube.com')) {
     hideYouTubeElements();
 }
 detectAndHideReels();
+
+// --- Automatic Categorization ---
+const identifyCategory = () => {
+    const metadata = {
+        title: document.title || '',
+        description: '',
+        keywords: '',
+        domain: window.location.hostname
+    };
+
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) metadata.description = metaDescription.content;
+
+    const metaKeywords = document.querySelector('meta[name="keywords"]');
+    if (metaKeywords) metadata.keywords = metaKeywords.content;
+
+    chrome.runtime.sendMessage({
+        type: 'IDENTIFY_CATEGORY',
+        data: metadata
+    });
+};
+
+// Delay identification slightly to ensure title/meta are populated
+setTimeout(identifyCategory, 2000);

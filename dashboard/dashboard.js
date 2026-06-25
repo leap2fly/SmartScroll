@@ -48,18 +48,35 @@ function renderUsageBars(todayUsage) {
 
     entries.forEach(([cat, val]) => {
         const percent = (val / maxVal) * 100;
-        const html = `
-            <div class="bar-item">
-                <div class="bar-label">${cat}</div>
-                <div class="bar-track"><div class="bar-fill" style="width: ${percent}%"></div></div>
-                <div class="bar-value">${val}m</div>
-            </div>
-        `;
-        container.insertAdjacentHTML('beforeend', html);
+        const item = document.createElement('div');
+        item.className = 'bar-item';
+
+        const label = document.createElement('div');
+        label.className = 'bar-label';
+        label.textContent = cat;
+
+        const track = document.createElement('div');
+        track.className = 'bar-track';
+        const fill = document.createElement('div');
+        fill.className = 'bar-fill';
+        fill.style.width = `${percent}%`;
+        track.appendChild(fill);
+
+        const value = document.createElement('div');
+        value.className = 'bar-value';
+        value.textContent = `${val}m`;
+
+        item.appendChild(label);
+        item.appendChild(track);
+        item.appendChild(value);
+        container.appendChild(item);
     });
 
     if (entries.length === 0) {
-        container.innerHTML = '<p style="font-size: 0.875rem; color: #9ca3af;">No usage tracked today.</p>';
+        const p = document.createElement('p');
+        p.style.cssText = 'font-size: 0.875rem; color: #9ca3af;';
+        p.textContent = 'No usage tracked today.';
+        container.appendChild(p);
     }
 }
 
@@ -71,18 +88,36 @@ function renderBlockedBars(blockedCategories) {
 
     entries.forEach(([cat, val]) => {
         const percent = (val / maxVal) * 100;
-        const html = `
-            <div class="bar-item">
-                <div class="bar-label">${cat}</div>
-                <div class="bar-track"><div class="bar-fill" style="width: ${percent}%; background: #ef4444;"></div></div>
-                <div class="bar-value">${val}</div>
-            </div>
-        `;
-        container.insertAdjacentHTML('beforeend', html);
+        const item = document.createElement('div');
+        item.className = 'bar-item';
+
+        const label = document.createElement('div');
+        label.className = 'bar-label';
+        label.textContent = cat;
+
+        const track = document.createElement('div');
+        track.className = 'bar-track';
+        const fill = document.createElement('div');
+        fill.className = 'bar-fill';
+        fill.style.width = `${percent}%`;
+        fill.style.background = '#ef4444';
+        track.appendChild(fill);
+
+        const value = document.createElement('div');
+        value.className = 'bar-value';
+        value.textContent = val;
+
+        item.appendChild(label);
+        item.appendChild(track);
+        item.appendChild(value);
+        container.appendChild(item);
     });
 
     if (entries.length === 0) {
-        container.innerHTML = '<p style="font-size: 0.875rem; color: #9ca3af;">No blocks recorded yet.</p>';
+        const p = document.createElement('p');
+        p.style.cssText = 'font-size: 0.875rem; color: #9ca3af;';
+        p.textContent = 'No blocks recorded yet.';
+        container.appendChild(p);
     }
 }
 

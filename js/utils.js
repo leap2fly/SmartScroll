@@ -34,16 +34,30 @@ export const DEFAULT_CATEGORIES = {
     'Finance': ['bloomberg.com', 'wsj.com', 'finance.yahoo.com']
 };
 
+export const CATEGORY_KEYWORDS = {
+    'Entertainment': ['movie', 'series', 'film', 'streaming', 'watch', 'video', 'tv'],
+    'Gaming': ['game', 'gaming', 'play', 'xbox', 'playstation', 'nintendo', 'steam', 'esports'],
+    'Sports': ['sport', 'football', 'soccer', 'basketball', 'nba', 'nfl', 'score', 'team'],
+    'Social Media': ['social', 'community', 'connect', 'friends', 'profile', 'post', 'feed', 'chat'],
+    'News': ['news', 'breaking', 'world', 'local', 'politics', 'journalism', 'article', 'press'],
+    'Shopping': ['shop', 'store', 'buy', 'cart', 'deal', 'price', 'checkout', 'product'],
+    'Education': ['learn', 'course', 'study', 'university', 'college', 'school', 'lesson', 'tutorial'],
+    'Technology': ['tech', 'software', 'hardware', 'code', 'programming', 'developer', 'gadget', 'ai'],
+    'Finance': ['finance', 'money', 'stock', 'invest', 'bank', 'trading', 'market', 'economy']
+};
+
 export const INDUSTRY_STANDARDS = {
     TIME_SAVED_PER_BLOCK_MIN: 5, // 5 minutes saved per block
-    DATA_SAVED_PER_VIDEO_MB: 15   // 15MB saved per video block
+    DATA_SAVED_PER_VIDEO_MB: 10   // 10MB saved per video block
 };
 
 /**
- * SHA-256 Hashing function
+ * SHA-256 Hashing function with salt
  */
 export async function hashPassword(password) {
-    const msgUint8 = new TextEncoder().encode(password);
+    // Simple static salt for extension environment consistency without needing separate salt storage
+    const SALT = "sbc_v2_secure_salt_2024";
+    const msgUint8 = new TextEncoder().encode(password + SALT);
     const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
     const hashArray = Array.from(new Uint8Array(hashBuffer));
     return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');

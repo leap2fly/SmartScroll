@@ -25,12 +25,23 @@ async function renderWhitelist() {
 
     whitelist.forEach((item, index) => {
         const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td>${item.pattern}</td>
-            <td>${item.scope}</td>
-            <td><button class="btn-danger" data-index="${index}">Delete</button></td>
-        `;
-        tr.querySelector('.btn-danger').addEventListener('click', () => deleteWhitelist(index));
+
+        const tdPattern = document.createElement('td');
+        tdPattern.textContent = item.pattern;
+        tr.appendChild(tdPattern);
+
+        const tdScope = document.createElement('td');
+        tdScope.textContent = item.scope;
+        tr.appendChild(tdScope);
+
+        const tdActions = document.createElement('td');
+        const btn = document.createElement('button');
+        btn.className = 'btn-danger';
+        btn.textContent = 'Delete';
+        btn.onclick = () => deleteWhitelist(index);
+        tdActions.appendChild(btn);
+        tr.appendChild(tdActions);
+
         tbody.appendChild(tr);
     });
 }
