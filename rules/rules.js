@@ -172,4 +172,11 @@ document.getElementById('add-rule-form').onsubmit = async (e) => {
     renderRules();
 };
 
+// Refresh UI when storage changes (e.g. auto-categorization)
+chrome.storage.onChanged.addListener(async (changes) => {
+    if (changes[STORAGE_KEYS.CATEGORIES]) {
+        await renderCategoryDomainManagement();
+    }
+});
+
 init();

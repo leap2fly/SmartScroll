@@ -34,6 +34,18 @@ export const DEFAULT_CATEGORIES = {
     'Finance': ['bloomberg.com', 'wsj.com', 'finance.yahoo.com']
 };
 
+export const CATEGORY_KEYWORDS = {
+    'Entertainment': ['movie', 'series', 'film', 'streaming', 'watch', 'video', 'tv'],
+    'Gaming': ['game', 'gaming', 'play', 'xbox', 'playstation', 'nintendo', 'steam', 'esports'],
+    'Sports': ['sport', 'football', 'soccer', 'basketball', 'nba', 'nfl', 'score', 'team'],
+    'Social Media': ['social', 'community', 'connect', 'friends', 'profile', 'post', 'feed', 'chat'],
+    'News': ['news', 'breaking', 'world', 'local', 'politics', 'journalism', 'article', 'press'],
+    'Shopping': ['shop', 'store', 'buy', 'cart', 'deal', 'price', 'checkout', 'product'],
+    'Education': ['learn', 'course', 'study', 'university', 'college', 'school', 'lesson', 'tutorial'],
+    'Technology': ['tech', 'software', 'hardware', 'code', 'programming', 'developer', 'gadget', 'ai'],
+    'Finance': ['finance', 'money', 'stock', 'invest', 'bank', 'trading', 'market', 'economy']
+};
+
 export const INDUSTRY_STANDARDS = {
     TIME_SAVED_PER_BLOCK_MIN: 5, // 5 minutes saved per block
     DATA_SAVED_PER_VIDEO_MB: 10   // 10MB saved per video block
